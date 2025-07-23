@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-civix_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-civix_password}
+      POSTGRES_DB: ${POSTGRES_DB:-civix_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-civix_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-civix_user}:${POSTGRES_PASSWORD:-civix_password}@postgres:5432/${POSTGRES_DB:-civix_db}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    command: python app/app.py
+
+  bot:
+    build: .
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-civix_user}:${POSTGRES_PASSWORD:-civix_password}@postgres:5432/${POSTGRES_DB:-civix_db}
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: python app/bot.py
+
+volumes:
+  postgres_data:

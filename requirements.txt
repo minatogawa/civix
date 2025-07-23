@@ -1,0 +1,21 @@
+# Core Flask dependencies
+Flask==2.3.3
+Flask-SQLAlchemy==3.0.5
+Flask-Migrate==4.0.5
+
+# Database
+psycopg2-binary==2.9.7
+
+# Telegram Bot
+python-telegram-bot==20.5
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Optional LLM integration
+openai==0.28.1
+
+# Development tools
+pytest==7.4.2
+black==23.7.0
+flake8==6.0.0
