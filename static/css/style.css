@@ -1,0 +1,103 @@
+/* Custom styles for CiviX */
+
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: 600;
+}
+
+.display-4 {
+    font-size: 3rem;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Table improvements */
+.table th {
+    border-top: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Status badges */
+.badge {
+    font-size: 0.75rem;
+}
+
+/* Code styling */
+code {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .card-body .row .col-4 h4 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Alert improvements */
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+/* Navigation active states */
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 0.25rem;
+}
+
+/* Custom button styles */
+.btn-outline-primary:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s;
+}
+
+/* Table hover effect */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+}

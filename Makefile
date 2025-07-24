@@ -58,6 +58,20 @@ format:
 migrate:
 	venv/Scripts/activate && flask db upgrade
 
+seed:
+	venv/Scripts/activate && python scripts/seed.py
+
+backup:
+	python scripts/backup.py create
+
+restore:
+	@echo "Available backups:"
+	@python scripts/backup.py list
+	@echo "Usage: make restore-file BACKUP=backup_file.sql"
+
+restore-file:
+	python scripts/backup.py restore data/postgres/$(BACKUP)
+
 # Quick setup for new environment
 setup: install
 	cp .env.example .env
