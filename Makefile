@@ -48,11 +48,19 @@ clean:
 test:
 	venv/Scripts/activate && pytest tests/ -v
 
+test-coverage:
+	venv/Scripts/activate && pytest tests/ -v --cov=app --cov-report=html
+
 lint:
 	venv/Scripts/activate && flake8 app/ tests/
 
 format:
 	venv/Scripts/activate && black app/ tests/
+
+format-check:
+	venv/Scripts/activate && black --check app/ tests/
+
+ci-test: lint format-check test
 
 # Database
 migrate:
