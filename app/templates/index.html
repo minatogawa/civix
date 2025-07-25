@@ -3,164 +3,76 @@
 {% block title %}Dashboard - CiviX{% endblock %}
 
 {% block content %}
+
+<!-- Demandas -->
+{% if stats and stats.demandas_recentes %}
 <div class="row">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h4><i class="bi bi-house-heart"></i> Bem-vindo ao CiviX</h4>
-            </div>
-            <div class="card-body">
-                <p class="lead">Sistema de Gestão de Relacionamentos Comunitários</p>
-                <p>
-                    O CiviX conecta você diretamente com sua comunidade através do Telegram,
-                    permitindo coleta e análise inteligente de demandas públicas.
-                </p>
-
-                <div class="row mt-4">
-                    <div class="col-md-4">
-                        <div class="text-center">
-                            <i class="bi bi-telegram display-4 text-primary"></i>
-                            <h6 class="mt-2">Bot Telegram</h6>
-                            <small class="text-muted">Coleta automática de mensagens</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="text-center">
-                            <i class="bi bi-graph-up display-4 text-success"></i>
-                            <h6 class="mt-2">Análise Inteligente</h6>
-                            <small class="text-muted">Processamento com IA</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="text-center">
-                            <i class="bi bi-people display-4 text-info"></i>
-                            <h6 class="mt-2">Gestão de Contatos</h6>
-                            <small class="text-muted">Organização centralizada</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h5><i class="bi bi-bar-chart"></i> Estatísticas</h5>
-            </div>
-            <div class="card-body" id="stats-card">
-                <div class="text-center">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Carregando...</span>
-                    </div>
-                    <p class="mt-2">Carregando estatísticas...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mt-3">
-            <div class="card-header">
-                <h5><i class="bi bi-gear"></i> Status do Sistema</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span>API:</span>
-                    <span class="badge bg-success">Online</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span>Banco de Dados:</span>
-                    <span class="badge" id="db-status">
-                        <div class="spinner-border spinner-border-sm" role="status"></div>
-                    </span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <span>Bot Telegram:</span>
-                    <span class="badge bg-warning">Configurar</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mt-4">
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
-                <h5><i class="bi bi-rocket"></i> Primeiros Passos</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5><i class="bi bi-list-check"></i> Demandas</h5>
+                <a href="/demandas" class="btn btn-sm btn-outline-primary">Ver Todas</a>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6>🔧 Configuração</h6>
-                        <ol>
-                            <li>Configure as variáveis no arquivo <code>.env</code></li>
-                            <li>Crie um bot no <a href="https://t.me/BotFather" target="_blank">@BotFather</a></li>
-                            <li>Execute as migrações: <code>make migrate</code></li>
-                            <li>Popule com dados de exemplo: <code>make seed</code></li>
-                        </ol>
-                    </div>
-                    <div class="col-md-6">
-                        <h6>🚀 Uso</h6>
-                        <ol>
-                            <li>Inicie o bot: <code>python app/bot.py</code></li>
-                            <li>Envie mensagens via Telegram</li>
-                            <li>Visualize os dados na seção <a href="{{ url_for('contacts') }}">Contatos</a></li>
-                            <li>Monitore através da <a href="/api/stats" target="_blank">API</a></li>
-                        </ol>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Tipo</th>
+                                <th>Bairro</th>
+                                <th>Status</th>
+                                <th>Prioridade</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for demanda in stats.demandas_recentes %}
+                            <tr>
+                                <td><span class="badge bg-secondary">#{{ demanda.id_registro }}</span></td>
+                                <td>{{ demanda.nome or 'N/A' }}</td>
+                                <td>
+                                    {% if demanda.tipo_demanda_ref %}
+                                    <span class="badge bg-info">{{ demanda.tipo_demanda_ref.nome }}</span>
+                                    {% else %}
+                                    <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ demanda.bairro_ref.nome if demanda.bairro_ref else 'N/A' }}</td>
+                                <td>
+                                    {% if demanda.status == 'nova' %}
+                                    <span class="badge bg-primary">Nova</span>
+                                    {% elif demanda.status == 'em_andamento' %}
+                                    <span class="badge bg-warning">Em Andamento</span>
+                                    {% elif demanda.status == 'resolvida' %}
+                                    <span class="badge bg-success">Resolvida</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ demanda.status|title }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if demanda.urgencia >= 4 %}
+                                    <span class="badge bg-danger">Alta</span>
+                                    {% elif demanda.urgencia >= 3 %}
+                                    <span class="badge bg-warning">Média</span>
+                                    {% else %}
+                                    <span class="badge bg-success">Baixa</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small class="text-muted">
+                                        {{ demanda.timestamp_captura.strftime('%d/%m %H:%M') if demanda.timestamp_captura else 'N/A' }}
+                                    </small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-// Load statistics
-fetch('/api/stats')
-    .then(response => response.json())
-    .then(data => {
-        const statsCard = document.getElementById('stats-card');
-        const dbStatus = document.getElementById('db-status');
-
-        if (data.database_status === 'connected') {
-            statsCard.innerHTML = `
-                <div class="row text-center">
-                    <div class="col-4">
-                        <h4 class="text-primary">${data.total_contacts}</h4>
-                        <small>Contatos</small>
-                    </div>
-                    <div class="col-4">
-                        <h4 class="text-success">${data.total_interactions}</h4>
-                        <small>Interações</small>
-                    </div>
-                    <div class="col-4">
-                        <h4 class="text-info">${data.total_campaigns}</h4>
-                        <small>Campanhas</small>
-                    </div>
-                </div>
-            `;
-            dbStatus.innerHTML = '<span class="badge bg-success">Online</span>';
-        } else {
-            statsCard.innerHTML = `
-                <div class="alert alert-warning">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    Banco de dados não conectado
-                </div>
-            `;
-            dbStatus.innerHTML = '<span class="badge bg-danger">Offline</span>';
-        }
-    })
-    .catch(error => {
-        console.error('Error loading stats:', error);
-        document.getElementById('stats-card').innerHTML = `
-            <div class="alert alert-danger">
-                <i class="bi bi-x-circle"></i>
-                Erro ao carregar estatísticas
-            </div>
-        `;
-        document.getElementById('db-status').innerHTML = '<span class="badge bg-danger">Erro</span>';
-    });
-</script>
+{% endif %}
 {% endblock %}
