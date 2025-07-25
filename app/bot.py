@@ -24,6 +24,9 @@ load_dotenv()
 
 logger = get_logger(__name__)
 
+# Bot status tracking
+start_time = time.time()
+
 # Health check server for bot service
 health_app = Flask(__name__)
 
