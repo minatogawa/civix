@@ -25,12 +25,15 @@ def register_routes(app):
     @app.after_request
     def log_response_info(response):
         """Log response information"""
-        log_request_context(
-            method=request.method,
-            path=request.path,
-            status_code=response.status_code,
-            response_time=0,  # TODO: Implement proper timing
-        )
+        try:
+            log_request_context(
+                method=request.method,
+                path=request.path,
+                status_code=response.status_code,
+                response_time=0,  # TODO: Implement proper timing
+            )
+        except Exception as e:
+            logger.warning(f"Failed to log response info: {e}")
         return response
 
     @app.route("/")
