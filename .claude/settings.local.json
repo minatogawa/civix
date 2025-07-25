@@ -5,7 +5,10 @@
       "Bash(python:*)",
       "Bash(docker-compose:*)",
       "Bash(curl:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(pre-commit run isort:*)",
+      "Bash(venv/Scripts/pre-commit run isort --all-files)",
+      "Bash(source:*)"
     ],
     "deny": []
   }

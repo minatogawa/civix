@@ -14,6 +14,8 @@ help:
 	@echo "  lint        - Run linting"
 	@echo "  format      - Format code with black"
 	@echo "  migrate     - Run database migrations"
+	@echo "  version     - Show current version"
+	@echo "  release-*   - Create new release (patch/minor/major)"
 
 # Development setup
 install:
@@ -51,16 +53,61 @@ test:
 test-coverage:
 	venv/Scripts/activate && pytest tests/ -v --cov=app --cov-report=html
 
+# Linting
 lint:
 	venv/Scripts/activate && flake8 app/ tests/
 
+lint-ruff:
+	venv/Scripts/activate && ruff check app/ tests/
+
+lint-all: lint lint-ruff
+
+# Formatting
 format:
 	venv/Scripts/activate && black app/ tests/
+	venv/Scripts/activate && isort app/ tests/
 
 format-check:
 	venv/Scripts/activate && black --check app/ tests/
+	venv/Scripts/activate && isort --check-only app/ tests/
 
-ci-test: lint format-check test
+# Ruff format (alternative to black)
+format-ruff:
+	venv/Scripts/activate && ruff format app/ tests/
+
+format-ruff-check:
+	venv/Scripts/activate && ruff format --check app/ tests/
+
+# Fix imports and formatting
+fix:
+	venv/Scripts/activate && ruff check --fix app/ tests/
+	venv/Scripts/activate && black app/ tests/
+	venv/Scripts/activate && isort app/ tests/
+
+# CI pipeline commands
+ci-test: lint-all format-check test
+
+# Alternative CI with ruff only
+ci-ruff: lint-ruff format-ruff-check test
+
+# Pre-commit hooks
+install-hooks:
+	venv/Scripts/activate && pre-commit install
+
+update-hooks:
+	venv/Scripts/activate && pre-commit autoupdate
+
+run-hooks:
+	venv/Scripts/activate && pre-commit run --all-files
+
+run-hooks-fast:
+	venv/Scripts/activate && pre-commit run --all-files --hook-stage manual
+
+# Development setup with hooks
+setup-dev: install install-hooks
+	@echo "Development environment ready!"
+	@echo "Pre-commit hooks installed."
+	@echo "Run 'make run-hooks' to test all hooks."
 
 # Database
 migrate:
@@ -84,6 +131,27 @@ restore-file:
 setup: install
 	cp .env.example .env
 	@echo "Remember to configure .env with your actual values!"
+
+# Version management
+version:
+	python scripts/release.py --current
+
+version-info:
+	python scripts/release.py --info
+
+release-patch:
+	python scripts/release.py patch
+
+release-minor:
+	python scripts/release.py minor
+
+release-major:
+	python scripts/release.py major
+
+release-pre:
+	@echo "Usage: make release-pre LEVEL=patch PRE=alpha"
+	@echo "Example: make release-pre LEVEL=minor PRE=beta"
+	python scripts/release.py $(LEVEL) --pre $(PRE)
 
 # Production deployment
 deploy:

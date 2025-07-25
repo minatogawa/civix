@@ -18,7 +18,7 @@ const CiviX = {
 
         // API status checker
         this.checkApiStatus();
-        
+
         // Set up periodic status check
         setInterval(() => {
             this.checkApiStatus();
@@ -29,7 +29,7 @@ const CiviX = {
         try {
             const response = await fetch('/api/hello');
             const data = await response.json();
-            
+
             // Update status indicator if exists
             const statusIndicator = document.querySelector('.navbar-text .bi-circle-fill');
             if (statusIndicator) {
@@ -37,7 +37,7 @@ const CiviX = {
             }
         } catch (error) {
             console.error('API status check failed:', error);
-            
+
             const statusIndicator = document.querySelector('.navbar-text .bi-circle-fill');
             if (statusIndicator) {
                 statusIndicator.className = 'bi bi-circle-fill text-danger';
@@ -48,7 +48,7 @@ const CiviX = {
     refreshPage() {
         // Add loading state
         document.body.classList.add('loading');
-        
+
         // Reload after short delay for UX
         setTimeout(() => {
             location.reload();
@@ -68,7 +68,7 @@ const CiviX = {
     formatRelativeTime(date) {
         const now = new Date();
         const diffInSeconds = Math.floor((now - date) / 1000);
-        
+
         if (diffInSeconds < 60) {
             return 'agora mesmo';
         } else if (diffInSeconds < 3600) {
@@ -93,11 +93,11 @@ const CiviX = {
                 },
                 ...options
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
-            
+
             return await response.json();
         } catch (error) {
             console.error(`API call to ${endpoint} failed:`, error);

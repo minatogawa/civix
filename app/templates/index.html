@@ -12,10 +12,10 @@
             <div class="card-body">
                 <p class="lead">Sistema de Gestão de Relacionamentos Comunitários</p>
                 <p>
-                    O CiviX conecta você diretamente com sua comunidade através do Telegram, 
+                    O CiviX conecta você diretamente com sua comunidade através do Telegram,
                     permitindo coleta e análise inteligente de demandas públicas.
                 </p>
-                
+
                 <div class="row mt-4">
                     <div class="col-md-4">
                         <div class="text-center">
@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
@@ -57,7 +57,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="card mt-3">
             <div class="card-header">
                 <h5><i class="bi bi-gear"></i> Status do Sistema</h5>
@@ -123,7 +123,7 @@ fetch('/api/stats')
     .then(data => {
         const statsCard = document.getElementById('stats-card');
         const dbStatus = document.getElementById('db-status');
-        
+
         if (data.database_status === 'connected') {
             statsCard.innerHTML = `
                 <div class="row text-center">
@@ -145,7 +145,7 @@ fetch('/api/stats')
         } else {
             statsCard.innerHTML = `
                 <div class="alert alert-warning">
-                    <i class="bi bi-exclamation-triangle"></i> 
+                    <i class="bi bi-exclamation-triangle"></i>
                     Banco de dados não conectado
                 </div>
             `;
@@ -156,7 +156,7 @@ fetch('/api/stats')
         console.error('Error loading stats:', error);
         document.getElementById('stats-card').innerHTML = `
             <div class="alert alert-danger">
-                <i class="bi bi-x-circle"></i> 
+                <i class="bi bi-x-circle"></i>
                 Erro ao carregar estatísticas
             </div>
         `;

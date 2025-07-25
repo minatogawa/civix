@@ -9,15 +9,16 @@ import sys
 from datetime import datetime
 
 # Add the app directory to the Python path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 
 def create_initial_migration():
     """Create initial migration file manually"""
-    
+
     migration_content = '''"""Initial migration: contacts, interactions, campaigns
 
 Revision ID: 001_initial
-Revises: 
+Revises:
 Create Date: {create_date}
 
 """
@@ -45,7 +46,7 @@ def upgrade():
         sa.PrimaryKeyConstraint('id'),
         sa.UniqueConstraint('telegram_user_id')
     )
-    
+
     # Create interactions table
     op.create_table('interactions',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -63,7 +64,7 @@ def upgrade():
         sa.ForeignKeyConstraint(['contact_id'], ['contacts.id'], ),
         sa.PrimaryKeyConstraint('id')
     )
-    
+
     # Create campaigns table
     op.create_table('campaigns',
         sa.Column('id', sa.Integer(), nullable=False),
@@ -83,19 +84,20 @@ def downgrade():
     op.drop_table('campaigns')
     op.drop_table('interactions')
     op.drop_table('contacts')
-'''.format(create_date=datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f'))
+'''.format(create_date=datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f"))
 
     # Create versions directory if it doesn't exist
-    versions_dir = os.path.join('migrations', 'versions')
+    versions_dir = os.path.join("migrations", "versions")
     os.makedirs(versions_dir, exist_ok=True)
-    
+
     # Write migration file
-    migration_file = os.path.join(versions_dir, '001_initial_migration.py')
-    with open(migration_file, 'w') as f:
+    migration_file = os.path.join(versions_dir, "001_initial_migration.py")
+    with open(migration_file, "w") as f:
         f.write(migration_content)
-    
+
     print(f"Created initial migration: {migration_file}")
     print("Run 'python -m flask db upgrade' when PostgreSQL is running")
+
 
 if __name__ == "__main__":
     create_initial_migration()
